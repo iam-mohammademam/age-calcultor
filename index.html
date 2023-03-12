@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>age calculator</title>
+  <!-- Unicons CDN -->
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+  <!-- Custom Styles -->
+  <style type="text/css" media="all">
+    /* Google Fonts */
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      list-style: none;
+      font-family: "Poppins", sans-serif
+    }
+
+    :root {
+      --bg-color: #191A2B;
+      --font-color: #ececec
+    }
+
+    input,
+    button {
+      outline: none
+    }
+
+    body {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+    }
+
+    .gap-15 {
+      gap: 15px
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 95%;
+      justify-content: center;
+      flex-direction: column;
+      row-gap: 20px;
+    }
+
+    .input-container {
+      width: 400px;
+      max-width: 100%;
+      padding: 30px;
+      background: var(--bg-color);
+      border-radius: 5px
+    }
+
+    .input-box {
+      width: 70%;
+      outline: none;
+      border-radius: 4px;
+      border: 1px solid #fff;
+      background: #fff;
+      padding: 0 7px;
+      justify-content: space-between;
+      overflow: hidden
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 8px 0 8px 5px;
+      background: transparent;
+      border: none;
+      font-weight: 500
+    }
+
+    button {
+      font-size: 16px;
+      padding: 8px 15px;
+      background: #FFDF00;
+      outline: none;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      font-weight: 500;
+      transition: all .4s ease-in-out
+    }
+
+    button:hover {
+      background: #FFCF2F;
+      border: 1px solid #FFDF00;
+    }
+
+    .output-wrapper {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px 20px;
+      border-radius: 6px;
+      background: var(--bg-color);
+      transform: scale(0);
+      transform-origin: center;
+      transition: transform .5s ease-in-out;
+    }
+
+    .output-wrapper.active {
+      transform: scale(1)
+    }
+
+    .output-wrapper li {
+      min-width: 70px;
+      padding: 10px;
+      border-radius: 3px;
+      font-size: 16px;
+      font-weight: 400;
+      flex-direction: column;
+      justify-content: center;
+      text-transform: capitalize;
+      background: #fff;
+    }
+
+    li span {
+      color: #000;
+      font-size: 25px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper flex">
+    <div class="flex gap-15 input-container">
+      <div class="flex input-box">
+        <i class="uil uil-calendar-alt"></i>
+        <input type="date" class="birth-input" />
+      </div>
+      <button type="submit" class="calculate-btn">Calculate</button>
+    </div>
+    <ul class="output-wrapper flex">
+      <li class="flex">
+        <span class="years">-</span>
+        Years
+      </li>
+      <li class="flex">
+        <span class="months">-</span>
+        months
+      </li>
+      <li class="flex">
+        <span class="days">-</span>
+        days
+      </li>
+      <li class="flex">
+        <span class="hours">-</span>
+        hours
+      </li>
+      <li class="flex">
+        <span class="minutes">-</span>
+        minutes
+      </li>
+      <li class="flex">
+        <span class="seconds">-</span>
+        seconds
+      </li>
+    </ul>
+  </div>
+</body>
+<!-- JavaScript -->
+<script type="text/javascript">
+  const birthInput = document.querySelector('.birth-input'),
+    outputCont = document.querySelector('.output-wrapper'),
+    calculateBtn = document.querySelector('.calculate-btn');
+
+  calculateBtn.addEventListener("click", () => {
+    // Todays Details
+    let currentDate = new Date(),
+      currentDay = currentDate.getUTCDate(),
+      currentMonth = currentDate.getMonth() + 1,
+      currentYear = currentDate.getFullYear(),
+      hour = currentDate.getHours(),
+      minute = currentDate.getMinutes(),
+      second = currentDate.getSeconds();
+    // Birth-Date Details
+    let birthDate = birthInput.value.split('-'),
+      inputDay = eval(birthDate[2]),
+      inputMonth = eval(birthDate[1]),
+      inputYear = eval(birthDate[0]);
+
+    if (birthInput.value == '') {
+      alert('Enter a birth date...')
+    }
+    else if (inputDay >= currentDay &&
+      inputMonth >= currentMonth &&
+      inputYear >= currentYear) {
+      alert('Enter a valid birth date...')
+    }
+    // else if (inputDay > currentDay ||
+    //   inputMonth > currentMonth ||
+    //   inputYear > currentYear) {
+    //   alert('Not born yet...')
+    // }
+    else {
+      const currentTotal = (((currentYear * 12) + currentMonth) * 30) + currentDay;
+      const inputTotal = (((inputYear * 12) + inputMonth) * 30) + inputDay;
+      // const difference = currentTotal - inputTotal;
+
+      let days = currentTotal - inputTotal,
+        months = (days / 30).toFixed(),
+        years = parseInt(months / 12),
+        hours = (days * 24) + hour,
+        minutes = (hours * 60) + minute,
+        seconds = (minutes * 60) + second;
+
+      days = days < 10 ? `${0}` + days : days;
+      months = months < 10 ? `${0}` + months : months;
+      years = years < 10 ? `${0}` + years : years;
+
+      outputCont.classList.add('active');
+      document.querySelector('.years').textContent = years;
+      document.querySelector('.months').textContent = months;
+      document.querySelector('.days').textContent = days;
+      document.querySelector('.hours').textContent = hours;
+      document.querySelector('.minutes').textContent = minutes;
+      document.querySelector('.seconds').textContent = seconds;
+      // console.log(years)
+    }
+  });
+</script>
+
+</html>
